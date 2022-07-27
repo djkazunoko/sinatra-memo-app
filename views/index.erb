@@ -1,2 +1,8 @@
 <a href="/memos/new">追加</a>
-<p><%= @title %></p>
+<ul>
+  <% @hash.each do |id, text| %>
+    <li>
+      <a href="#"><%= text["title"] %></a>
+    </li>
+  <% end %>
+</ul>
