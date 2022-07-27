@@ -8,3 +8,8 @@ end
 get '/memos/new' do
   erb :new
 end
+
+post '/memos' do
+  @title = params[:title]
+  erb :index
+end
