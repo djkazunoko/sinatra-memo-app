@@ -3,6 +3,10 @@ require 'sinatra/reloader'
 require 'json'
 
 get '/' do
+  redirect '/memos'
+end
+
+get '/memos' do
   @memos = File.open("public/memos.json") { |file| JSON.load(file) }
   erb :index
 end
@@ -26,7 +30,7 @@ post '/memos' do
   memos["#{id}"] = {"title" => @title, "content" => @content}
   File.open("public/memos.json", 'w') { |file| JSON.dump(memos, file) }
 
-  redirect '/'
+  redirect '/memos'
 end
 
 get '/memos/:id' do |n|
