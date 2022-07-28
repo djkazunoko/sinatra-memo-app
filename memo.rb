@@ -39,3 +39,11 @@ get '/memos/:id' do |n|
   @content = @memos[n]["content"]
   erb :show
 end
+
+delete '/memos/:id' do |n|
+  memos = File.open("public/memos.json") { |file| JSON.load(file) }
+  memos.delete(n)
+  File.open("public/memos.json", 'w') { |file| JSON.dump(memos, file) }
+
+  redirect '/memos'
+end
