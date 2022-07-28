@@ -3,9 +3,7 @@ require 'sinatra/reloader'
 require 'json'
 
 get '/' do
-  File.open("public/memos.json") do |file|
-    @memos = JSON.load(file)
-  end
+  @memos = File.open("public/memos.json") { |file| JSON.load(file) }
   erb :index
 end
 
@@ -15,13 +13,17 @@ end
 
 post '/memos' do
   @title = params[:title]
-  erb :index
+  @content = params[:content]
+
+  memos = File.open("public/memos.json") { |file| JSON.load(file) }
+  memos["99"] = {"title" => @title, "content" => @content}
+  File.open("public/memos.json", 'w') { |file| JSON.dump(memos, file) }
+
+  redirect '/'
 end
 
 get '/memos/:id' do |n|
-  File.open("public/memos.json") do |file|
-    @memos = JSON.load(file)
-  end
+  @memos = File.open("public/memos.json") { |file| JSON.load(file) }
   @title = @memos[n]["title"]
   @content = @memos[n]["content"]
   erb :show
