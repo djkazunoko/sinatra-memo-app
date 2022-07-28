@@ -17,9 +17,9 @@ post '/memos' do
 
   memos = File.open("public/memos.json") { |file| JSON.load(file) }
   maxid = 0
-  memos.each_key do |key|
-    if key.to_i > maxid
-      maxid = key.to_i
+  memos.each_key do |id|
+    if id.to_i > maxid
+      maxid = id.to_i
     end
   end
   id = maxid + 1
