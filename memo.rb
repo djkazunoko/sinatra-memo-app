@@ -47,3 +47,21 @@ delete '/memos/:id' do |n|
 
   redirect '/memos'
 end
+
+get '/memos/:id/edit' do |n|
+  memos = File.open("public/memos.json") { |file| JSON.load(file) }
+  @title = memos[n]["title"]
+  @content = memos[n]["content"]
+  erb :edit
+end
+
+patch '/memos/:id' do |n|
+  @title = params[:title]
+  @content = params[:content]
+
+  memos = File.open("public/memos.json") { |file| JSON.load(file) }
+  memos[n] = {"title" => @title, "content" => @content}
+  File.open("public/memos.json", 'w') { |file| JSON.dump(memos, file) }
+
+  redirect "/memos/#{n}"
+end

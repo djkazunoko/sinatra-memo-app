@@ -4,4 +4,7 @@
   <input type="hidden" name="_method" value="delete">
   <input type="submit" value="削除">
 </form>
+<form action="/memos/<%= params[:id] %>/edit" method="get">
+  <input type="submit" value="編集">
+</form>
 <a href="/memos">メモ一覧に戻る</a>
