@@ -27,10 +27,9 @@ post '/memos' do
       maxid = id.to_i
     end
   end
-  id = maxid + 1
-  memos["#{id}"] = {"title" => @title, "content" => @content}
+  id = (maxid + 1).to_s
+  memos[id] = {"title" => @title, "content" => @content}
   File.open("public/memos.json", 'w') { |file| JSON.dump(memos, file) }
-
   redirect '/memos'
 end
 
