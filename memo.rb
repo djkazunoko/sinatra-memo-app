@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'sinatra/reloader'
 require 'json'
+require 'cgi'
 
 get '/' do
   redirect '/memos'

@@ -1,5 +1,5 @@
-<p><%= @title %></p>
-<p><%= @content %></p>
+<p><%= CGI.escapeHTML(@title) %></p>
+<p><%= CGI.escapeHTML(@content) %></p>
 <form action="/memos/<%= params[:id] %>" method="post">
   <input type="hidden" name="_method" value="delete">
   <input type="submit" value="削除">
