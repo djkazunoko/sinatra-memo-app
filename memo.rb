@@ -33,11 +33,7 @@ post '/memos' do
   @content = params[:content]
 
   memos = get_memos(FILE_PATH)
-  maxid = 0
-  memos.each_key do |id|
-    maxid = id.to_i if id.to_i > maxid
-  end
-  id = (maxid + 1).to_s
+  id = (memos.keys.map(&:to_i).max + 1).to_s
   memos[id] = { 'title' => @title, 'content' => @content }
   set_memos(FILE_PATH, memos)
   redirect '/memos'
