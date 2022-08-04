@@ -39,35 +39,35 @@ post '/memos' do
   redirect '/memos'
 end
 
-get '/memos/:id' do |n|
+get '/memos/:id' do
   @memos = get_memos(FILE_PATH)
-  @title = @memos[n]['title']
-  @content = @memos[n]['content']
+  @title = @memos[params[:id]]['title']
+  @content = @memos[params[:id]]['content']
   erb :show
 end
 
-delete '/memos/:id' do |n|
+delete '/memos/:id' do
   memos = get_memos(FILE_PATH)
-  memos.delete(n)
+  memos.delete(params[:id])
   set_memos(FILE_PATH, memos)
 
   redirect '/memos'
 end
 
-get '/memos/:id/edit' do |n|
+get '/memos/:id/edit' do
   memos = get_memos(FILE_PATH)
-  @title = memos[n]['title']
-  @content = memos[n]['content']
+  @title = memos[params[:id]]['title']
+  @content = memos[params[:id]]['content']
   erb :edit
 end
 
-patch '/memos/:id' do |n|
+patch '/memos/:id' do
   @title = params[:title]
   @content = params[:content]
 
   memos = get_memos(FILE_PATH)
-  memos[n] = { 'title' => @title, 'content' => @content }
+  memos[params[:id]] = { 'title' => @title, 'content' => @content }
   set_memos(FILE_PATH, memos)
 
-  redirect "/memos/#{n}"
+  redirect "/memos/#{params[:id]}"
 end
