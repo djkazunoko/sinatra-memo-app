@@ -2,17 +2,11 @@
 
 require 'sinatra'
 require 'sinatra/reloader'
-require 'json'
 require 'cgi'
+require 'pg'
 
-FILE_PATH = 'public/memos.json'
-
-def get_memos(file_path)
-  File.open(file_path) { |f| JSON.parse(f.read) }
-end
-
-def set_memos(file_path, memos)
-  File.open(file_path, 'w') { |f| JSON.dump(memos, f) }
+def get_connection
+  PG.connect( dbname: 'testdb' )
 end
 
 get '/' do
@@ -20,7 +14,9 @@ get '/' do
 end
 
 get '/memos' do
-  @memos = get_memos(FILE_PATH)
+  conn = get_connection
+  result = conn.exec("SELECT * FROM memos")
+  @memos = result
   erb :index
 end
 
