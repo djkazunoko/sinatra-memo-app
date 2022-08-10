@@ -37,10 +37,9 @@ post '/memos' do
   title = params[:title]
   content = params[:content]
 
-  memos = get_memos(FILE_PATH)
-  id = (memos.keys.map(&:to_i).max + 1).to_s
-  memos[id] = { 'title' => title, 'content' => content }
-  set_memos(FILE_PATH, memos)
+  conn = get_connection
+  conn.exec_params("INSERT INTO memos(title, content) VALUES ($1, $2);", [title, content])
+
   redirect '/memos'
 end
 
