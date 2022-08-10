@@ -43,14 +43,6 @@ post '/memos' do
   redirect '/memos'
 end
 
-delete '/memos/:id' do
-  memos = get_memos(FILE_PATH)
-  memos.delete(params[:id])
-  set_memos(FILE_PATH, memos)
-
-  redirect '/memos'
-end
-
 get '/memos/:id/edit' do
   conn = get_connection
   result = conn.exec("SELECT * FROM memos WHERE id = #{params[:id]}")
@@ -68,4 +60,11 @@ patch '/memos/:id' do
   conn.exec_params("UPDATE memos SET title = $1, content = $2 WHERE id = $3;", [title, content, params[:id]])
 
   redirect "/memos/#{params[:id]}"
+end
+
+delete '/memos/:id' do
+  conn = get_connection
+  conn.exec_params("DELETE FROM memos WHERE id = $1;", [params[:id]])
+
+  redirect '/memos'
 end
