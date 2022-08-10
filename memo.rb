@@ -52,9 +52,11 @@ delete '/memos/:id' do
 end
 
 get '/memos/:id/edit' do
-  memos = get_memos(FILE_PATH)
-  @title = memos[params[:id]]['title']
-  @content = memos[params[:id]]['content']
+  conn = get_connection
+  result = conn.exec("SELECT * FROM memos WHERE id = #{params[:id]}")
+  memo = result.tuple_values(0)
+  @title = memo[1]
+  @content = memo[2]
   erb :edit
 end
 
@@ -62,9 +64,8 @@ patch '/memos/:id' do
   title = params[:title]
   content = params[:content]
 
-  memos = get_memos(FILE_PATH)
-  memos[params[:id]] = { 'title' => title, 'content' => content }
-  set_memos(FILE_PATH, memos)
+  conn = get_connection
+  conn.exec_params("UPDATE memos SET title = $1, content = $2 WHERE id = $3;", [title, content, params[:id]])
 
   redirect "/memos/#{params[:id]}"
 end
