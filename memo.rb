@@ -34,12 +34,12 @@ get '/memos/:id' do
 end
 
 post '/memos' do
-  @title = params[:title]
-  @content = params[:content]
+  title = params[:title]
+  content = params[:content]
 
   memos = get_memos(FILE_PATH)
   id = (memos.keys.map(&:to_i).max + 1).to_s
-  memos[id] = { 'title' => @title, 'content' => @content }
+  memos[id] = { 'title' => title, 'content' => content }
   set_memos(FILE_PATH, memos)
   redirect '/memos'
 end
@@ -60,11 +60,11 @@ get '/memos/:id/edit' do
 end
 
 patch '/memos/:id' do
-  @title = params[:title]
-  @content = params[:content]
+  title = params[:title]
+  content = params[:content]
 
   memos = get_memos(FILE_PATH)
-  memos[params[:id]] = { 'title' => @title, 'content' => @content }
+  memos[params[:id]] = { 'title' => title, 'content' => content }
   set_memos(FILE_PATH, memos)
 
   redirect "/memos/#{params[:id]}"
