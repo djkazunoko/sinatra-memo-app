@@ -7,6 +7,10 @@ require 'pg'
 
 configure do
   CONN = PG.connect( dbname: 'testdb' )
+  result = CONN.exec("SELECT * FROM information_schema.tables WHERE table_name = 'memos'")
+  if result.values.empty?
+    CONN.exec("CREATE TABLE memos (id serial, title varchar(255), content text)")
+  end
 end
 
 get '/' do
