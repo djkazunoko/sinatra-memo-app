@@ -5,8 +5,8 @@ require 'sinatra/reloader'
 require 'cgi'
 require 'pg'
 
-def get_connection
-  PG.connect( dbname: 'testdb' )
+configure do
+  CONN = PG.connect( dbname: 'testdb' )
 end
 
 get '/' do
@@ -14,8 +14,7 @@ get '/' do
 end
 
 get '/memos' do
-  conn = get_connection
-  result = conn.exec("SELECT * FROM memos")
+  result = CONN.exec("SELECT * FROM memos")
   @memos = result
   erb :index
 end
@@ -25,8 +24,7 @@ get '/memos/new' do
 end
 
 get '/memos/:id' do
-  conn = get_connection
-  result = conn.exec("SELECT * FROM memos WHERE id = #{params[:id]}")
+  result = CONN.exec("SELECT * FROM memos WHERE id = #{params[:id]}")
   memo = result.tuple_values(0)
   @title = memo[1]
   @content = memo[2]
@@ -37,15 +35,13 @@ post '/memos' do
   title = params[:title]
   content = params[:content]
 
-  conn = get_connection
-  conn.exec_params("INSERT INTO memos(title, content) VALUES ($1, $2);", [title, content])
+  CONN.exec_params("INSERT INTO memos(title, content) VALUES ($1, $2);", [title, content])
 
   redirect '/memos'
 end
 
 get '/memos/:id/edit' do
-  conn = get_connection
-  result = conn.exec("SELECT * FROM memos WHERE id = #{params[:id]}")
+  result = CONN.exec("SELECT * FROM memos WHERE id = #{params[:id]}")
   memo = result.tuple_values(0)
   @title = memo[1]
   @content = memo[2]
@@ -56,15 +52,13 @@ patch '/memos/:id' do
   title = params[:title]
   content = params[:content]
 
-  conn = get_connection
-  conn.exec_params("UPDATE memos SET title = $1, content = $2 WHERE id = $3;", [title, content, params[:id]])
+  CONN.exec_params("UPDATE memos SET title = $1, content = $2 WHERE id = $3;", [title, content, params[:id]])
 
   redirect "/memos/#{params[:id]}"
 end
 
 delete '/memos/:id' do
-  conn = get_connection
-  conn.exec_params("DELETE FROM memos WHERE id = $1;", [params[:id]])
+  CONN.exec_params("DELETE FROM memos WHERE id = $1;", [params[:id]])
 
   redirect '/memos'
 end
