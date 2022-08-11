@@ -28,7 +28,7 @@ get '/memos/new' do
 end
 
 get '/memos/:id' do
-  result = CONN.exec("SELECT * FROM memos WHERE id = #{params[:id]}")
+  result = CONN.exec("SELECT * FROM memos WHERE id = $1;", [params[:id]])
   memo = result.tuple_values(0)
   @title = memo[1]
   @content = memo[2]
@@ -45,7 +45,7 @@ post '/memos' do
 end
 
 get '/memos/:id/edit' do
-  result = CONN.exec("SELECT * FROM memos WHERE id = #{params[:id]}")
+  result = CONN.exec("SELECT * FROM memos WHERE id = $1;", [params[:id]])
   memo = result.tuple_values(0)
   @title = memo[1]
   @content = memo[2]
