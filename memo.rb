@@ -5,32 +5,34 @@ require 'sinatra/reloader'
 require 'cgi'
 require 'pg'
 
-CONN = PG.connect(dbname: 'postgres')
+def conn
+  @conn ||= PG.connect(dbname: 'postgres')
+end
 
 configure do
-  result = CONN.exec("SELECT * FROM information_schema.tables WHERE table_name = 'memos'")
-  CONN.exec('CREATE TABLE memos (id serial, title varchar(255), content text)') if result.values.empty?
+  result = conn.exec("SELECT * FROM information_schema.tables WHERE table_name = 'memos'")
+  conn.exec('CREATE TABLE memos (id serial, title varchar(255), content text)') if result.values.empty?
 end
 
 def read_memos
-  CONN.exec('SELECT * FROM memos')
+  conn.exec('SELECT * FROM memos')
 end
 
 def read_memo(id)
-  result = CONN.exec('SELECT * FROM memos WHERE id = $1;', [id])
+  result = conn.exec('SELECT * FROM memos WHERE id = $1;', [id])
   result.tuple_values(0)
 end
 
 def post_memo(title, content)
-  CONN.exec_params('INSERT INTO memos(title, content) VALUES ($1, $2);', [title, content])
+  conn.exec_params('INSERT INTO memos(title, content) VALUES ($1, $2);', [title, content])
 end
 
 def edit_memo(title, content, id)
-  CONN.exec_params('UPDATE memos SET title = $1, content = $2 WHERE id = $3;', [title, content, id])
+  conn.exec_params('UPDATE memos SET title = $1, content = $2 WHERE id = $3;', [title, content, id])
 end
 
 def delete_memo(id)
-  CONN.exec_params('DELETE FROM memos WHERE id = $1;', [id])
+  conn.exec_params('DELETE FROM memos WHERE id = $1;', [id])
 end
 
 get '/' do
