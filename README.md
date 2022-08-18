@@ -2,14 +2,15 @@
 
 `sinatra-memo-app`はSinatraで作成したシンプルなメモアプリです。
 
-## バージョン
+## 要件
 
 - Bundler：2.3.12
 - Ruby：3.1.0
+- PostgreSQL：14.3
 
 ## インストール
 
-1. 以下のコマンドを実行して、Gemfileを作成します。
+1. Gemfileを作成します。
 ```
 $ mkdir my-app
 $ cd my-app
@@ -23,19 +24,24 @@ gem 'sinatra-contrib'
 gem 'webrick'
 ```
 
-3. 以下のコマンドを実行して、Gemをインストールします。
+3. Gemをインストールします。
 ```
 $ bundle install
 ```
 
 ## 使い方
 
-1. 以下のコマンドを実行して、メモアプリを起動します。
+1. PostgreSQLを起動します。
+```
+$ brew services start postgresql
+```
+
+2. アプリケーションを起動します。
 ```
 $ ruby memo.rb
 ```
 
-2. ブラウザから以下のURLにアクセスします。
+3. ブラウザから以下のURLにアクセスします。
 
 ```
 http://localhost:4567
